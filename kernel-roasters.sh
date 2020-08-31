@@ -22,8 +22,14 @@ function get_kernel_dir(){
    return $kerenl_dir
 }
 function build_it_bro(){
-
    echo building...
+}
+function hardware_gen {
+   echo generating hardware config...
+   pre_arch=$(lscpu|grep Architecture:)
+   echo $pre_arch
+   arch_array=$pre_arch
+   arch=(echo $pre_arch|rev|cut -f1 -d' '|rev)
 }
 function generate_config(){
    need_initrd=0
@@ -46,11 +52,7 @@ function generate_config(){
    seperator
    ask_yes_no need_initrd=1
    seperator
-   echo do you need WI-FI support
-   seperator
-   ask_yes_no need_wifi=1
-
-   
+   hardware_gen
 }
 
 echo "        /~~~~~~~~~~~~~~~~~~~/|";
@@ -84,3 +86,4 @@ while true; do
    }
    fi
 done
+return 0
