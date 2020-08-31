@@ -26,10 +26,10 @@ function build_it_bro(){
 }
 function hardware_gen {
    echo generating hardware config...
+   seperator
    pre_arch=$(lscpu|grep Architecture:)
-   echo $pre_arch
    arch_array=$pre_arch
-   arch=(echo $pre_arch|rev|cut -f1 -d' '|rev)
+   arch=$(echo $pre_arch|rev|cut -f1 -d' '|rev)
 }
 function generate_config(){
    need_initrd=0
@@ -42,15 +42,15 @@ function generate_config(){
    awk '{print $1}' /proc/modules
    echo "Do you need LVM support?"
    seperator
-   ask_yes_no need_lvm=1
+   ask_yes_no $(need_lvm=1)
    seperator
    echo do you need luks/dmcrypt support
    seperator
-   ask_yes_no need_dm_crypt=1
+   ask_yes_no $(need_dm_crypt=1)
    seperator
    echo will your root be using a device mapper and/or need an initrd in any way?
    seperator
-   ask_yes_no need_initrd=1
+   ask_yes_no $(need_initrd=1)
    seperator
    hardware_gen
 }
