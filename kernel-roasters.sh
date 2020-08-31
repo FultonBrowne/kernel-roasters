@@ -2,69 +2,55 @@
 function seperator(){
    echo "-------------------------------------------"
 }
-function download_kerenl_tar(){
-   mkdir /usr/src/roasters/tars
-   
-}
-function download_open_kernel(){
-   mkdir /usr/src/roasters
-   echo Please select version
-   seperator
-   echo "(A latest rc (BAD idea)"
-   seperator
-   echo "(B latest stable"
-   seperator
-   echo "(C LTS 5.4.x"
-   seperator
-   echo "(D LTS 4.19.x"
-   seperator
-   echo "(E LTS 4.14.x"
-   seperator
+function ask_yes_no(){
+   echo [y or N]:
    while true; do
-      read input
-      if [[ $input == "a" ]]; then {
-         echo selcted RC version -- may luck be with you
-         kernel_url=""
-         ver="rc"
+      read yn
+      if [[ $yn == "y" ]]; then
+         $@
          break
-      }
+      else
+         echo selected no
+         return
       fi
-      
-      if [[ $input == "b" ]]; then {
-         echo selcted stable
-         kernel_url=""
-         ver="stable"
-         break
-      }
-      fi
+   done
+}
+function get_kernel_dir(){
+   echo Please give the dir of your kernel source
+   seperator
+   read kernel_dir
+   return $kerenl_dir
+}
+function build_it_bro(){
 
-      if [[ $input == "c" ]]; then {
-         echo selected LTS: 5.4.x
-         kernel_url=""
-         ver="54"
-         break
-      }
-      fi
-
-      if [[ $input == "d" ]]; then {
-         echo selected LTS: 4.19.x
-         kernel_url=""
-         ver="419"
-         break
-      }
-      fi
-
-      if [[ $input == "e" ]]; then {
-         echo selected LTS: 4.14.x
-         kernel_url=""
-         ver="414"
-         break
-      }
-      fi
-done
+   echo building...
 }
 function generate_config(){
-   download_open_kernel
+   need_initrd=0
+   need_lvm=0
+   need_dm_crypt=0
+   need_wifi=0
+   kernel_dir=""
+   get_kernel_dir
+   cd $kernel_dir
+   awk '{print $1}' /proc/modules
+   echo "Do you need LVM support?"
+   seperator
+   ask_yes_no need_lvm=1
+   seperator
+   echo do you need luks/dmcrypt support
+   seperator
+   ask_yes_no need_dm_crypt=1
+   seperator
+   echo will your root be using a device mapper and/or need an initrd in any way?
+   seperator
+   ask_yes_no need_initrd=1
+   seperator
+   echo do you need WI-FI support
+   seperator
+   ask_yes_no need_wifi=1
+
+   
 }
 
 echo "        /~~~~~~~~~~~~~~~~~~~/|";
