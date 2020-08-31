@@ -30,6 +30,9 @@ function hardware_gen {
    pre_arch=$(lscpu|grep Architecture:)
    arch_array=$pre_arch
    arch=$(echo $pre_arch|rev|cut -f1 -d' '|rev)
+   echo cpu arch is: $arch
+   current_modules=$(awk '{print $1}' /proc/modules)
+   
 }
 function generate_config(){
    need_initrd=0
@@ -39,7 +42,6 @@ function generate_config(){
    kernel_dir=""
    get_kernel_dir
    cd $kernel_dir
-   awk '{print $1}' /proc/modules
    echo "Do you need LVM support?"
    seperator
    ask_yes_no $(need_lvm=1)
