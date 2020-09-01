@@ -2,6 +2,13 @@
 function seperator(){
    echo "-------------------------------------------"
 }
+function test2(){
+   size=1
+   for arg; do
+   mod_array[$size]=$arg
+   size=$(($size+1))
+done
+}
 function ask_yes_no(){
    echo [y or N]:
    while true; do
@@ -32,11 +39,8 @@ function hardware_gen {
    arch=$(echo $pre_arch|rev|cut -f1 -d' '|rev)
    echo cpu arch is: $arch
    current_modules=$(awk '{print $1}' /proc/modules)
-   mod_array=(${current_modules// / })
-   for i in "${!array[@]}"
-do
-    echo "$i=>${array[i]}"
- done
+   mod_array[0]="lolololol"
+   test2 $current_modules
    
 }
 function generate_config(){
