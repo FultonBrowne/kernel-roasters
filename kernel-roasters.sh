@@ -32,6 +32,11 @@ function hardware_gen {
    arch=$(echo $pre_arch|rev|cut -f1 -d' '|rev)
    echo cpu arch is: $arch
    current_modules=$(awk '{print $1}' /proc/modules)
+   mod_array=(${current_modules// / })
+   for i in "${!array[@]}"
+do
+    echo "$i=>${array[i]}"
+ done
    
 }
 function generate_config(){
@@ -51,6 +56,7 @@ function generate_config(){
    ask_yes_no $(need_dm_crypt=1)
    seperator
    echo will your root be using a device mapper and/or need an initrd in any way?
+   echo we WILL NOT generate an initrd for you
    seperator
    ask_yes_no $(need_initrd=1)
    seperator
