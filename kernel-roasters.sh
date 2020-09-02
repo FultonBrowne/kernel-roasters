@@ -2,11 +2,9 @@
 function seperator(){
    echo "-------------------------------------------"
 }
-function test2(){
-   size=1
+function add_mod_params{
    for arg; do
-   mod_array[$size]=$arg
-   size=$(($size+1))
+      echo adding mod $arg
 done
 }
 function ask_yes_no(){
@@ -39,7 +37,6 @@ function hardware_gen {
    arch=$(echo $pre_arch|rev|cut -f1 -d' '|rev)
    echo cpu arch is: $arch
    current_modules=$(awk '{print $1}' /proc/modules)
-   mod_array[0]="lolololol"
    test2 $current_modules
    
 }
