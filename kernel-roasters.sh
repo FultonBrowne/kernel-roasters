@@ -1,11 +1,14 @@
-#! /bin/sh
+#! /bin/sh -e
 function seperator(){
    echo "-------------------------------------------"
+}
+function add_to_config{
+   echo $1 > coffee-config
 }
 function add_mod_params{
    for arg; do
       echo adding mod $arg
-done
+   done
 }
 function ask_yes_no(){
    echo [y or N]:
@@ -32,13 +35,7 @@ function build_it_bro(){
 function hardware_gen {
    echo generating hardware config...
    seperator
-   pre_arch=$(lscpu|grep Architecture:)
-   arch_array=$pre_arch
-   arch=$(echo $pre_arch|rev|cut -f1 -d' '|rev)
-   echo cpu arch is: $arch
-   current_modules=$(awk '{print $1}' /proc/modules)
-   test2 $current_modules
-   
+   make localyesconfig
 }
 function generate_config(){
    need_initrd=0
@@ -61,6 +58,8 @@ function generate_config(){
    seperator
    ask_yes_no $(need_initrd=1)
    seperator
+   rm coffee-config
+   cp /etc/roasters/base-config .config
    hardware_gen
 }
 
