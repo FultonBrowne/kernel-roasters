@@ -36,7 +36,7 @@ get_drivers(){
 #
 #}
 get_kernel_dir(){
-   echo Please give the dir of your kernel source
+   echo "Please give the dir of your kernel source"
    seperator
    read -r kernel_dir
 }
@@ -66,7 +66,6 @@ generate_config(){
    kernel_dir=""
    get_kernel_dir
    cd "$kernel_dir"
-   rm coffee-config
    cp /etc/roasters/base-config .config
    hardware_gen
    build_it_bro
