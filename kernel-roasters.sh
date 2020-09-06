@@ -19,15 +19,36 @@ get_drivers(){
    echo "please type the name of the driver needed (as shown in refrence)"
 
 }
+#get_used_features(){
+#   echo "Do you need LVM support?"
+#   seperator
+#   ask_yes_no "$(need_lvm=1)"
+#   seperator
+#   echo "do you need luks/dmcrypt support"
+#   seperator
+#   ask_yes_no "$(need_dm_crypt=1)"
+#   seperator
+#   echo "will your root be using a device mapper and/or need an initrd in any way?"
+#   echo "we WILL NOT generate an initrd for you"
+#   seperator
+#   ask_yes_no "$(need_initrd=1)"
+#   seperator
+#
+#}
 get_kernel_dir(){
    echo Please give the dir of your kernel source
    seperator
    read -r kernel_dir
 }
 build_it_bro(){
+   echo "would you like to open the config interface before building?"
+   seperator
+   ask_yes_no "$(make nconfig)"
    echo building...
    make
+   seperator
    # there is no modules so installing them is stupid
+   echo "installing..."
    make install
 }
 hardware_gen(){
@@ -39,26 +60,12 @@ hardware_gen(){
    ask_yes_no "$(get_drivers)"
 }
 generate_config(){
-   need_initrd=0
-   need_lvm=0
-   need_dm_crypt=0
-   need_wifi=0
+#   need_initrd=0
+#   need_lvm=0
+#   need_dm_crypt=0
    kernel_dir=""
    get_kernel_dir
    cd "$kernel_dir"
-   echo "Do you need LVM support?"
-   seperator
-   ask_yes_no "$(need_lvm=1)"
-   seperator
-   echo "do you need luks/dmcrypt support"
-   seperator
-   ask_yes_no "$(need_dm_crypt=1)"
-   seperator
-   echo "will your root be using a device mapper and/or need an initrd in any way?"
-   echo "we WILL NOT generate an initrd for you"
-   seperator
-   ask_yes_no "$(need_initrd=1)"
-   seperator
    rm coffee-config
    cp /etc/roasters/base-config .config
    hardware_gen
