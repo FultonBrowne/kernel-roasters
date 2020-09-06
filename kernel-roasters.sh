@@ -1,13 +1,13 @@
 #! /bin/sh -e
-function seperator(){
+seperator(){
    echo "-------------------------------------------"
 }
-function ask_yes_no(){
+ask_yes_no(){
    echo "[y or N]:"
    while true; do
-      read yn
-      if [[ $yn == "y" ]]; then
-         $@
+      read -r yn
+      if [ "$yn" = "y" ]; then
+        "$@"
          break
       else
          echo selected no
@@ -15,46 +15,54 @@ function ask_yes_no(){
       fi
    done
 }
-function get_kernel_dir(){
+get_drivers(){
+   echo "please type the name of the driver needed (as shown in refrence)"
+
+}
+get_kernel_dir(){
    echo Please give the dir of your kernel source
    seperator
-   read kernel_dir
-   return $kerenl_dir
+   read -r kernel_dir
 }
-function build_it_bro(){
+build_it_bro(){
    echo building...
+   make
+   # there is no modules so installing them is stupid
+   make install
 }
-function hardware_gen {
+hardware_gen(){
    echo generating hardware config...
    seperator
    make localyesconfig
-   echo hardware config generated
-   Do you need any firmware drivers? full list of devices that need it here: https://wiki.debian.org/Firmware
+   echo "hardware config generated"
+   echo "Do you need any firmware drivers? full list of devices that need it here: https://wiki.debian.org/Firmware"
+   ask_yes_no "$(get_drivers)"
 }
-function generate_config(){
+generate_config(){
    need_initrd=0
    need_lvm=0
    need_dm_crypt=0
    need_wifi=0
    kernel_dir=""
    get_kernel_dir
-   cd $kernel_dir
+   cd "$kernel_dir"
    echo "Do you need LVM support?"
    seperator
-   ask_yes_no $(need_lvm=1)
+   ask_yes_no "$(need_lvm=1)"
    seperator
-   echo do you need luks/dmcrypt support
+   echo "do you need luks/dmcrypt support"
    seperator
-   ask_yes_no $(need_dm_crypt=1)
+   ask_yes_no "$(need_dm_crypt=1)"
    seperator
-   echo will your root be using a device mapper and/or need an initrd in any way?
-   echo we WILL NOT generate an initrd for you
+   echo "will your root be using a device mapper and/or need an initrd in any way?"
+   echo "we WILL NOT generate an initrd for you"
    seperator
-   ask_yes_no $(need_initrd=1)
+   ask_yes_no "$(need_initrd=1)"
    seperator
    rm coffee-config
    cp /etc/roasters/base-config .config
    hardware_gen
+   build_it_bro
 }
 
 echo "        /~~~~~~~~~~~~~~~~~~~/|";
@@ -80,8 +88,8 @@ seperator
 echo "(C Generate a kerenl config via a wizard"
 
 while true; do
-   read input
-   if [[ $input == "a" ]]; then {
+   read -r input
+   if [ "$input" = "a" ]; then {
       echo selected a
       generate_config
       break
