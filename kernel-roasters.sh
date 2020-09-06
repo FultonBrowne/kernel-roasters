@@ -41,9 +41,9 @@ get_kernel_dir(){
    read -r kernel_dir
 }
 build_it_bro(){
-   echo "would you like to open the config interface before building?"
+   echo "would you like to open the config interface before building? (opening it and saving is almost always needed for a proper build)"
    seperator
-   ask_yes_no "$(make nconfig)"
+   ask_yes_no "make nconfig"
    echo building...
    make
    seperator
