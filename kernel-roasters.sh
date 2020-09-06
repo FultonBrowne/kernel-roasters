@@ -2,16 +2,8 @@
 function seperator(){
    echo "-------------------------------------------"
 }
-function add_to_config{
-   echo $1 > coffee-config
-}
-function add_mod_params{
-   for arg; do
-      echo adding mod $arg
-   done
-}
 function ask_yes_no(){
-   echo [y or N]:
+   echo "[y or N]:"
    while true; do
       read yn
       if [[ $yn == "y" ]]; then
@@ -36,6 +28,8 @@ function hardware_gen {
    echo generating hardware config...
    seperator
    make localyesconfig
+   echo hardware config generated
+   Do you need any firmware drivers? full list of devices that need it here: https://wiki.debian.org/Firmware
 }
 function generate_config(){
    need_initrd=0
